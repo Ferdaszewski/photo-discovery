@@ -12,8 +12,9 @@ TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 
 
 # Secret keys, login, passwords, etc
-from photodiscovery.keys import DJANGO_SECRET_KEY
+from photodiscovery.keys import DJANGO_SECRET_KEY, PSQL_ROLE_PASSWORD
 SECRET_KEY = DJANGO_SECRET_KEY
+DB_PASSWORD = PSQL_ROLE_PASSWORD
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -30,7 +31,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'visualize'
+    'visualize',
+    'registration',
+    'imagekit',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -51,8 +54,12 @@ WSGI_APPLICATION = 'photodiscovery.wsgi.application'
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'photoappdb',
+        'USER': 'photoappdb',
+        'PASSWORD': DB_PASSWORD,
+        'HOST': 'localhost',
+        'PORT': ''
     }
 }
 
