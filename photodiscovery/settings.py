@@ -1,20 +1,35 @@
 """
 Django settings for photodiscovery project.
 """
+from django.core.exceptions import ImproperlyConfigured
+import json
 
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# Project paths and directories
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_PATH = os.path.join(BASE_DIR, 'static')
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
+TEMPLATE_DIRS = (TEMPLATE_PATH,)
 
 
-# Secret keys, login, passwords, etc
-from photodiscovery.keys import DJANGO_SECRET_KEY, PSQL_ROLE_PASSWORD
-SECRET_KEY = DJANGO_SECRET_KEY
-DB_PASSWORD = PSQL_ROLE_PASSWORD
+# JSON based secrets module
+with open(BASE_DIR + '/photodiscovery/secrets.json', 'r') as f:
+    SECRETS = json.load(f)
+
+
+def get_secret(setting, secrets=SECRETS):
+    """Helper function to get a secret with a key of 'setting'."""
+    try:
+        return secrets[setting]
+    except KeyError:
+        error_msg = "Set the {0} environment variable".format(setting)
+        raise ImproperlyConfigured(error_msg)
+
+
+# Django Secret key, change before production
+SECRET_KEY = get_secret('SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -46,6 +61,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+
+#
 ROOT_URLCONF = 'photodiscovery.urls'
 
 WSGI_APPLICATION = 'photodiscovery.wsgi.application'
@@ -56,10 +73,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'photoappdb',
-        'USER': 'photoappdb',
-        'PASSWORD': DB_PASSWORD,
-        'HOST': 'localhost',
-        'PORT': ''
+        'USER': get_secret('DB_USER'),
+        'PASSWORD': get_secret('DB_PASSWORD'),
+        'HOST': get_secret('DB_HOST'),
+        'PORT': get_secret('DB_PORT')
     }
 }
 
@@ -81,3 +98,10 @@ STATICFILES_DIRS = (
 
 # Media files (user upload)
 MEDIA_URL = '/media/'
+
+
+# Registration settings
+LOGIN_URL = '/accounts/login/'
+REGISTRATION_OPEN = True
+REGISTRATION_AUTO_LOGIN = True
+LOGIN_REDIRECT_URL = '/'

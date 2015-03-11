@@ -1,0 +1,16 @@
+{% extends "visualize/base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block body_block %}
+  <div>
+    <h1>Please Sign In</h1>
+  </div>
+
+  <form id="login_form" method="POST" accept="">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit" value="Submit">Sign In</button>
+    <p>Don't have an account? <a href="{% url 'registration_register' %}">Sign up</a>!</p>
+  </form>
+{% endblock %}

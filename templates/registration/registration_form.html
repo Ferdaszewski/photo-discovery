@@ -1,0 +1,13 @@
+{% extends "visualize/base.html" %}
+
+{% block body_block %}
+  <div>
+    <h1>Register</h1>
+  </div>
+
+  <form id="registration_form" method="POST" action="">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit" value="Register">Register</button>
+  </form>
+{% endblock %}
