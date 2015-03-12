@@ -41,5 +41,5 @@ class VisualizationMetadata(models.Model):
     ac_hex_color_avg = models.IntegerField(max_length=16777215)
     ac_color_sort_order = models.IntegerField()
 
-    def __unicdoe__(self):
+    def __unicode__(self):
         return self.image_file
