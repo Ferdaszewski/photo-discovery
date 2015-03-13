@@ -3,18 +3,24 @@ Django settings for photodiscovery project.
 """
 from django.core.exceptions import ImproperlyConfigured
 import json
+import os
 
 
 # Project paths and directories
-import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 STATIC_PATH = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (STATIC_PATH,)
+
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 TEMPLATE_DIRS = (TEMPLATE_PATH,)
 
 
-# JSON based secrets module
+# JSON based secrets to manage keys and passwords
 with open(BASE_DIR + '/photodiscovery/secrets.json', 'r') as f:
     SECRETS = json.load(f)
 
@@ -87,17 +93,6 @@ TIME_ZONE = 'America/Los_Angeles'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    STATIC_PATH,
-    )
-
-
-# Media files (user upload)
-MEDIA_URL = '/media/'
 
 
 # Registration settings
