@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import visualize.models
 from django.conf import settings
 
 
@@ -27,8 +28,10 @@ class Migration(migrations.Migration):
             name='Photo',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('image_file', models.ImageField(height_field=b'height', width_field=b'width', upload_to=b'')),
-                ('collection', models.ForeignKey(to='visualize.Album')),
+                ('image_file', models.ImageField(height_field=b'height', width_field=b'width', upload_to=visualize.models.create_file_path)),
+                ('width', models.IntegerField(blank=True)),
+                ('heigth', models.IntegerField(blank=True)),
+                ('album', models.ForeignKey(to='visualize.Album')),
             ],
             options={
             },
@@ -45,5 +48,9 @@ class Migration(migrations.Migration):
             options={
             },
             bases=(models.Model,),
+        ),
+        migrations.AlterUniqueTogether(
+            name='album',
+            unique_together=set([('user', 'name')]),
         ),
     ]

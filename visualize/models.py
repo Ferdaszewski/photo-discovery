@@ -1,10 +1,18 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from photodiscovery.settings import BASE_DIR
+
 
 def create_file_path(instance, filename):
-    return '/user_images/{0}/{1}/{2}'.format(
+    print "create_file_path: ", instance
+    print "album: ", instance.album
+    print "user: ", instance.album.user
+    print "filename: ", filename
+    file_path = BASE_DIR + '/media/user_images/{0}/{1}/{2}'.format(
         instance.album.user, instance.album.name, filename)
+    print "file_path: ", file_path
+    return file_path
 
 
 class Album(models.Model):
@@ -26,7 +34,10 @@ class Photo(models.Model):
         upload_to=create_file_path,
         blank=False,
         height_field='height',
-        width_field='width')
+        width_field='width',
+        )
+    width = models.IntegerField(blank=True, null=True)
+    heigth = models.IntegerField(blank=True, null=True)
 
     def __unicode__(self):
         return self.image_file.name

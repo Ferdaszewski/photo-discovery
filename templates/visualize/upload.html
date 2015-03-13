@@ -1,0 +1,22 @@
+{% extends "visualize/base.html" %}
+
+{% load staticfiles %}
+
+{% block head_block %}
+<script src="{% static 'js/upload.js' %}"></script>
+{% endblock %}
+
+{% block body_block %}
+  <div>
+    <h1>Upload Files</h1>
+  </div>
+
+  <form id="upload-form" method="POST" action="">
+    {% csrf_token %}
+
+    <input id="album-name" type="text">
+    <input id="image-select" type="file" type="image/jpeg" name="images" multiple required>
+
+    <button type="submit" id="upload-button" value="Upload">Upload</button>
+  </form>
+{% endblock %}

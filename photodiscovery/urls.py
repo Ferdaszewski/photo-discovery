@@ -17,7 +17,6 @@ urlpatterns = patterns(
         name='registration_register'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^$', 'visualize.views.index'),
-    url(r'', include('visualize.urls')),
     )
 
 if settings.DEBUG:
