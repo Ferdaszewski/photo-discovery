@@ -37,7 +37,7 @@ class Photo(models.Model):
         width_field='width',
         )
     width = models.IntegerField(blank=True, null=True)
-    heigth = models.IntegerField(blank=True, null=True)
+    height = models.IntegerField(blank=True, null=True)
 
     def __unicode__(self):
         return self.image_file.name
