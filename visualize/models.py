@@ -8,7 +8,7 @@ from photodiscovery.settings import BASE_DIR
 def create_file_path(instance, filename):
     """Helper function to create a file path for a photo."""
     album_id = instance.album.id
-    new_filename = instance.photo_id + filename.split('.')[-1]
+    new_filename = instance.photo_id + '.' + filename.split('.')[-1]
 
     return BASE_DIR + '/media/images/{0}/{1}'.format(album_id, new_filename)
 

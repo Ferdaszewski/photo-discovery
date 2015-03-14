@@ -35,10 +35,13 @@ def upload(request):
         new_album.save()
 
         # Add new photos to the album
+        num_images = len(image_list)
         for image in image_list:
             new_photo = Photo(image_file=image)
             new_photo.album = new_album
             new_photo.save()
 
-        return redirect('dashboard')
-    return render(request, 'visualize/upload.html', {})
+        return HttpResponse("<h1>%d files uploaded.</h1>" % num_images)
+
+    else:
+        return render(request, 'visualize/upload.html', {})
