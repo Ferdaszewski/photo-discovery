@@ -4,6 +4,9 @@ from django.shortcuts import redirect, render
 
 from visualize.models import Album, Photo
 
+from visualize.forms import NewAlbumForm
+from visualize.models import Album, Photo
+
 
 @login_required
 def index(request):
@@ -18,6 +21,7 @@ def visualize(request):
 @login_required
 def dashboard(request):
     return HttpResponse('User profile dashboard')
+
 
 @login_required
 def upload(request):

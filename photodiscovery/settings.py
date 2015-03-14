@@ -68,9 +68,8 @@ MIDDLEWARE_CLASSES = (
 )
 
 
-#
+# URL root and WSGI app
 ROOT_URLCONF = 'photodiscovery.urls'
-
 WSGI_APPLICATION = 'photodiscovery.wsgi.application'
 
 
