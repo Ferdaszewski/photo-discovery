@@ -15,7 +15,7 @@ def index(request):
 
 
 def visualize(request):
-    return HttpResponse('A cool visulization!')
+    return HttpResponse('A cool visualization!')
 
 
 @login_required
