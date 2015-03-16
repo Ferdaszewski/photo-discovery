@@ -1,60 +1,49 @@
-document.addEventListener('DOMContentLoaded', function() {
+// var uploader = new plupload.Uploader({
+//     runtimes: "html5, flash, silverlight, html4",
+//     browse_button: "pickfiles",
+//     container: "uploader",
+//     url: "/",
 
-    // Get form elements
-    var form = document.getElementById('upload-form');
-    var imageSelect = document.getElementById('image-select');
-    var uploadButton = document.getElementById('upload-button');
-    var csrftoken = form.children.namedItem('csrfmiddlewaretoken').value
-    var album_name = document.getElementById('album-name')
+//     filters: {
+//         max_file_size: "10mb",
+//         mime_types: [
+//             {title: "Image files", extensions: "jpg,jpeg"}
+//         ]
+//     },
 
+//     // Flash settings
+//     flash_swf_url: "/static/plupload/js/Moxie.swf",
 
-    // AJAX upload of multiple files
-    form.onsubmit = function(event) {
-        event.preventDefault();
-        uploadButton.innerHTML = "Uploading...";
-        var images = imageSelect.files;
+//     // Silverlight settings
+//     silverlight_xap_url: "/static/plupload/js/Moxie.xap",
 
-        // List of allowed MIME types
-        var allowedImageTypes = ['image/jpeg'];
+//     init: {
+//         PostInit: function() {
+//             document.getElementById("filelist").innerHTML = "";
 
-        // Load each of the images into formData
-        var formData = new FormData();
-        for (var i = 0; i < images.length; i++) {
-            var image = images[i]
+//             document.getElementById("upload-button").onclick = function(event) {
+//                 uploader.start();
+//                 return false;
+//             };
+//         },
 
-            // Check that images are of allowed type(s)
-            if (allowedImageTypes.indexOf(image.type) > -1) {
-                // Load image into AJAX payload
-                formData.append('image_list', image, image.name);
-            } else {                
-                // Add some error feedback here, for now, just exclude these images
-                continue;
-            }
+//         FilesAdded: function(up, files) {
+//             plupload.each(files, function(file) {
+//                 document.getElementById("filelist").innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
+//             });
+//         },
 
-        }
+//         UploadProgress: function(up, file) {
+//             document.getElementById(file.id).getElementsByTagName("b")[0].innerHTML = '<span>' + file.percent + '%</span>';
+//         },
 
-        // Load album name into AJAX payload
-        formData.append('album_name', album_name.value)
+//         Error: function(up, err) {
+//             document.getElementById("error_display").appendChild(document.createTextNode("\nError #" + err.code + ": " + err.message));
+//         }
+//     }
+// });
 
-        // Setup AJAX request object
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '', true);
-        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+// uploader.init();
 
-        // Set event handler for when the request is completed successfully
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                // Files uploaded, do more visual feedback here
-                uploadButton.innerHTML = 'Uploaded!';
-            } else {
-                alert("An error occurred with the file upload!");
-                uploadButton.innerHTML = 'Error!';
-            }
-        };
+// Custom example logic
 
-        // Send the images!
-        xhr.send(formData)
-
-        // TODO: Get response (JSON?) then display success or errors.
-    };
-});

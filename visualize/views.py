@@ -1,8 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-
-from visualize.models import Album, Photo
+import json
 
 from visualize.forms import NewAlbumForm
 from visualize.models import Album, Photo
@@ -25,23 +24,25 @@ def dashboard(request):
 
 @login_required
 def upload(request):
+    return render(request, 'visualize/upload.html', {})
+
+
+@login_required
+def upload_image(request):
     if request.method == 'POST':
         user = request.user
         album_name = request.POST.get('album_name')
-        image_list = request.FILES.getlist('image_list')
+        image = request.FILES.get('image')
 
         # Create a new album
         new_album, _ = Album.objects.get_or_create(name=album_name, user=user)
         new_album.save()
 
-        # Add new photos to the album
-        num_images = len(image_list)
-        for image in image_list:
-            new_photo = Photo(image_file=image)
-            new_photo.album = new_album
-            new_photo.save()
+        # Add new photo to the album
+        new_photo = Photo(image_file=image)
+        new_photo.album = new_album
+        new_photo.save()
 
-        return HttpResponse("<h1>%d files uploaded.</h1>" % num_images)
-
+        return HttpResponse(json.dumps({'OK': 1}), content_type="application/json")
     else:
-        return render(request, 'visualize/upload.html', {})
+        return HttpResponse("Error, POST only at this URL")
