@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
     form.onsubmit = function(event) {
         event.preventDefault();
         uploadButton.innerHTML = "Uploading...";
-
         var images = imageSelect.files;
 
         // List of allowed MIME types
