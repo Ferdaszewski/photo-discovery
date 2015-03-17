@@ -31,19 +31,44 @@ def upload(request):
 def upload_image(request):
     if request.method == 'POST':
         user = request.user
-        album_name = request.POST.get('album_name')
-        image = request.FILES.get('image')
+        form = NewAlbumForm(request.POST, request.FILES)
+        print form
 
-        # Create a new album
-        new_album, _ = Album.objects.get_or_create(name=album_name, user=user)
-        new_album.save()
+        if form.is_valid():
+            form_data = form.cleaned_data
 
-        # Add new photo to the album
-        new_photo = Photo(image_file=image)
-        new_photo.album = new_album
-        new_photo.original_name = str(image.name)
-        new_photo.save()
+            # Get album
+            album = Album.objects.get(
+                name=form_data['album_name'], user=user)
 
-        return HttpResponse(json.dumps({'OK': 1}), content_type="application/json")
+            # Add new photo to the album
+            new_photo = Photo(image_file=form_data['image'])
+            new_photo.album = album
+            new_photo.original_name = str(form_data['image'].name)
+            new_photo.save()
+
+        return HttpResponse(json.dumps({'OK': 1}),
+                            content_type="application/json")
     else:
         return HttpResponse("Error, POST only at this URL")
+
+
+@login_required
+def create_album(request):
+    if request.method == 'POST' and request.POST.get('album_name'):
+        new_album, created = Album.objects.get_or_create(
+            name=request.POST.get('album_name'),
+            user=request.user)
+        if created:
+            new_album.save()
+            return HttpResponse(
+                json.dumps({'success': True, 'error_message': None}),
+                content_type='application/json')
+    else:
+        return HttpResponse("Error, POST only at this URL")
+
+    # Album not created, return error
+    return HttpResponse(
+        json.dumps({'success': False,
+                   'error_message': 'Already an album with that name!'}),
+        content_type='application/json')

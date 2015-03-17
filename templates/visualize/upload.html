@@ -36,9 +36,48 @@
   </pre>
 
 <!-- Plupload js only works in a script tag -->
-  <script type="text/javascript">    
-    var uploader = new plupload.Uploader({
+  <script type="text/javascript">
+    function start_upload(up, name) {
+      if (name.length === 0) {
+        display_error("Please enter an Album Name");
+        return;
+      }
 
+      // Ajax call to create album, display error if album name is not unique
+      $.ajax({
+        url: "{% url 'create_album' %}",
+        data: {
+          album_name: name,
+          csrfmiddlewaretoken: "{{ csrf_token }}"
+        },
+        type: "POST",
+        dataType: "json",
+
+        success: function(json) {
+          if (json['success']) {            
+            // Start plupload upload of images
+            up.start();
+          } else {
+            display_error(json['error_message']);
+            return;
+          }
+        },
+
+        error: function(xhr, status, errorThrown) {
+          display_error("Ajax error");
+          console.log(errorThrown);
+          return;
+        }
+      });
+    }
+
+
+    function display_error(message) {
+      document.getElementById('console').appendChild(document.createTextNode("\nError: " + message));
+    }
+
+
+    var uploader = new plupload.Uploader({
       // Plupload settings
       runtimes: 'html5,flash,silverlight',
       browse_button: 'file-select',
@@ -57,10 +96,20 @@
 
       // Plupload custom callback functions
       init: {
-        PostInit: function() {
+        PostInit: function(up) {
           document.getElementById('requirments').innerHTML = '';
+
           document.getElementById('upload-btn').onclick = function() {
-            uploader.start();
+
+            // Verify there are files
+            if (up.total.queued > 0) {              
+              up.settings.album_name = $.trim(document.getElementById("album-name").value);
+              album_response = start_upload(uploader, up.settings.album_name);
+            } else {
+              display_error("Please select at lease one file to upload.")
+            }
+            
+            // start_upload only returns on an error, otherwise starts the upload
             return false;
           };
         },
@@ -77,7 +126,7 @@
           document.getElementById("upload-btn").disabled = true;
           up.settings.multipart_params = {
             csrfmiddlewaretoken: "{{ csrf_token }}",
-            album_name: document.getElementById("album-name").value
+            album_name: up.settings.album_name
           };
         },
 
@@ -94,9 +143,6 @@
       }
   });
 
-  function get_album_name() {
-    return document.getElementById('album-name').value
-  };
 
   uploader.init();
   </script>
