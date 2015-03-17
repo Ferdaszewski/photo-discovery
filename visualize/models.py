@@ -14,7 +14,7 @@ def create_file_path(instance, filename):
 
 
 def create_uuid():
-    """Helper function to create a new random UUID for a primary key"""
+    """Helper function to create a new random UUID"""
     return uuid.uuid4().hex
 
 
@@ -45,6 +45,7 @@ class Photo(models.Model):
         height_field='height',
         width_field='width',
         )
+    original_name = models.CharField(max_length=255, blank=False)
     width = models.IntegerField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
 

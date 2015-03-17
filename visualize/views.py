@@ -41,6 +41,7 @@ def upload_image(request):
         # Add new photo to the album
         new_photo = Photo(image_file=image)
         new_photo.album = new_album
+        new_photo.original_name = str(image.name)
         new_photo.save()
 
         return HttpResponse(json.dumps({'OK': 1}), content_type="application/json")
