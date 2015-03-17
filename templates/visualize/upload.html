@@ -18,32 +18,30 @@
     <h1>Upload Files</h1>
   </div>
 
-  <p id="filelist">Your browser doesn't have Flash, Silverlight or HTML5 support.</p>
+  <p id="filelist">Your browser doesn't have Flash, Silverlight, or HTML5 support.</p>
 
   <form id="upload-form" method="POST" action="">
     {% csrf_token %}
+    <label for="album-name">Album Name</label>
     <input id="album-name" type="text">
+    <button id="file-select">Select Images</button>
+    <button id="upload-btn" type="submit" value="Upload">Start Upload</button>
   </form>
-
-  <div id="file-upload-container">
-      <a id="pickfiles" href="javascript:;">[Select files]</a> 
-      <a id="uploadfiles" href="javascript:;">[Upload files]</a>
-  </div>
 
   <pre id="console"></pre>
 
   <script type="text/javascript">    
     var uploader = new plupload.Uploader({
-      runtimes: 'html5, flash, silverlight, html4',
-      browse_button: 'pickfiles',
-      container: 'file-upload-container',
+
+      // Plupload settings
+      runtimes: 'html5,flash,silverlight',
+      browse_button: 'file-select',
       url : "{% url 'upload_image' %}",
       file_data_name:'image',
-      multipart_params: {"csrfmiddlewaretoken": '{{ csrf_token }}', "album_name": "test-album"},
-
       flash_swf_url: "{% static 'plupload/js/Moxie.swf' %}",
       silverlight_xap_url: "{% static 'plupload/js/Moxie.xap' %}",
       
+      // Jpgs under 10mb only
       filters: {
         max_file_size: '10mb',
         mime_types: [
@@ -51,10 +49,11 @@
         ]
       },
 
+      // Plupload custom callback functions
       init: {
         PostInit: function() {
           document.getElementById('filelist').innerHTML = '';
-          document.getElementById('uploadfiles').onclick = function() {
+          document.getElementById('upload-btn').onclick = function() {
             uploader.start();
             return false;
           };
@@ -64,6 +63,15 @@
             document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
           });
         },
+
+        // Add csrf token required by Django and the other form elements to request
+        BeforeUpload: function(up, file) {
+          up.settings.multipart_params = {
+            csrfmiddlewaretoken: "{{ csrf_token }}",
+            album_name: document.getElementById("album-name").value
+          };
+        },
+
         UploadProgress: function(up, file) {
           document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
         },
