@@ -18,7 +18,10 @@
     <h1>Upload Files</h1>
   </div>
 
-  <p id="filelist">Your browser doesn't have Flash, Silverlight, or HTML5 support.</p>
+  <div id="upload-progress"></div>
+  <ul>  
+    <div id="filelist"></div>
+  </ul>
 
   <form id="upload-form" method="POST" action="">
     {% csrf_token %}
@@ -28,7 +31,9 @@
     <button id="upload-btn" type="submit" value="Upload">Start Upload</button>
   </form>
 
-  <pre id="console"></pre>
+  <pre id="console">
+    <div id="requirments">Your browser doesn't have Flash, Silverlight, or HTML5 support.</div>
+  </pre>
 
 <!-- Plupload js only works in a script tag -->
   <script type="text/javascript">    
@@ -53,7 +58,7 @@
       // Plupload custom callback functions
       init: {
         PostInit: function() {
-          document.getElementById('filelist').innerHTML = '';
+          document.getElementById('requirments').innerHTML = '';
           document.getElementById('upload-btn').onclick = function() {
             uploader.start();
             return false;
@@ -61,12 +66,15 @@
         },
         FilesAdded: function(up, files) {
           plupload.each(files, function(file) {
-            document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
+            document.getElementById('filelist').innerHTML += '<li id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ')<span class="file-upload-progress"</span></li>';
           });
+          document.getElementById("file-select").disabled = true;
+          up.settings.total_files = up.total.queued;
         },
 
         // Add csrf token required by Django and the other form elements to request
         BeforeUpload: function(up, file) {
+          document.getElementById("upload-btn").disabled = true;
           up.settings.multipart_params = {
             csrfmiddlewaretoken: "{{ csrf_token }}",
             album_name: document.getElementById("album-name").value
@@ -74,7 +82,11 @@
         },
 
         UploadProgress: function(up, file) {
-          document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+          document.getElementById(file.id).getElementsByClassName('file-upload-progress')[0].innerHTML = " " + file.percent + "%";
+        },
+        FileUploaded: function(up, file) {
+          document.getElementById('upload-progress').innerHTML = 
+          "<span>" + up.total.uploaded + "/" + up.settings.total_files + " - " + up.total.percent + "%</span>"
         },
         Error: function(up, err) {
           document.getElementById('console').appendChild(document.createTextNode("\nError #" + err.code + ": " + err.message));
@@ -86,8 +98,6 @@
     return document.getElementById('album-name').value
   };
 
-  window.onload = function() {
-      uploader.init();
-  };
+  uploader.init();
   </script>
 {% endblock %}
