@@ -8,13 +8,16 @@
   <h1>Hello {{ user.username }}! Here are your images!</h1>
 
   <h2>{{ album.name }} - Web sized images</h2>
-  {% for image in images %}
-    {% generateimage 'visualize:websize' source=image.image_file %}
-  {% endfor %}
 
-  <h2>{{ album.name }} - Thumbnails</h2>
-  {% for image in images %}
-    {% generateimage 'visualize:thumbnail' source=image.image_file %}
-  {% endfor %}
+  <ul class="clearing-thumbs" data-clearing>
+    {% for image in images %}
+      <li><a href="{% static image.web.url %}"><img src="{% static image.thumbnail.url %}"></a></li>
+    {% endfor %}
+  </ul>
 
+{% endblock %}
+
+{% block end_body_block %}
+<script src="{% static 'foundation/js/foundation.clearing.js' %}"></script>
+<script>$(document).foundation();</script>
 {% endblock %}

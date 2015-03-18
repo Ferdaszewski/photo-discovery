@@ -8,8 +8,8 @@
 -->
 
 <!-- debug -->
-<script type="text/javascript" src="{% static 'plupload/js/moxie.js' %}"></script>
-<script type="text/javascript" src="{% static 'plupload/js/plupload.dev.js' %}"></script>
+<script src="{% static 'plupload/js/moxie.js' %}"></script>
+<script src="{% static 'plupload/js/plupload.dev.js' %}"></script>
 {% endblock %}
 
 
@@ -34,7 +34,10 @@
   <pre id="console">
     <div id="requirments">Your browser doesn't have Flash, Silverlight, or HTML5 support.</div>
   </pre>
+{% endblock %}
 
+
+{% block end_body_block %}
 <!-- Plupload js only works in a script tag -->
   <script type="text/javascript">
     function start_upload(up, name) {

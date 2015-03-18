@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFit, SmartResize
 import uuid
 
 from photodiscovery.settings import BASE_DIR
@@ -39,18 +41,41 @@ class Photo(models.Model):
         default=create_uuid
         )
     album = models.ForeignKey(Album)
-    image_file = models.ImageField(
+    original = models.ImageField(
         upload_to=create_file_path,
         blank=False,
         height_field='height',
         width_field='width',
         )
+
+    # Imagekit specs
+    web = ImageSpecField(
+        source='original',
+        processors=[ResizeToFit(
+            width=1200,
+            height=790,
+            upscale=False,
+            )],
+        format='JPEG',
+        options={'quality': 90}
+        )
+    thumbnail = ImageSpecField(
+        source='original',
+        processors=[SmartResize(
+            width=100,
+            height=100,
+            upscale=False,
+            )],
+        format='JPEG',
+        options={'quality': 70},
+        )
+
     original_name = models.CharField(max_length=255, blank=False)
     width = models.IntegerField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
 
     def __unicode__(self):
-        return self.image_file.name
+        return self.original_name
 
 
 class VisualizationMetadata(models.Model):

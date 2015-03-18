@@ -44,7 +44,6 @@ def upload_image(request):
     if request.method == 'POST':
         user = request.user
         form = NewAlbumForm(request.POST, request.FILES)
-        print form
 
         if form.is_valid():
             form_data = form.cleaned_data
@@ -54,7 +53,7 @@ def upload_image(request):
                 name=form_data['album_name'], user=user)
 
             # Add new photo to the album
-            new_photo = Photo(image_file=form_data['image'])
+            new_photo = Photo(original=form_data['image'])
             new_photo.album = album
             new_photo.original_name = str(form_data['image'].name)
             new_photo.save()
