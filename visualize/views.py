@@ -19,7 +19,19 @@ def visualize(request):
 
 @login_required
 def dashboard(request):
-    return HttpResponse('User profile dashboard')
+
+    # TEST
+    user = request.user
+    album = Album.objects.filter(user=user)[0]
+    images = Photo.objects.filter(album=album)
+
+    context_dict = {
+        'user': user,
+        'album': album,
+        'images': images
+    }
+
+    return render(request, 'visualize/test.html', context_dict)
 
 
 @login_required
