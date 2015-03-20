@@ -4,6 +4,7 @@ from django.template.defaultfilters import slugify
 
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, SmartResize
+import itertools
 import uuid
 
 from photodiscovery.settings import BASE_DIR
@@ -30,14 +31,26 @@ class Album(models.Model):
     slug = models.SlugField()
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        """Uniqueness is only guaranteed with user and name. But 
+        different names can result in the same slug. This function
+        ensures automatically that a user's slug is unique to them.
+        """
+        self.slug = orig = slugify(self.name)
+        for counter in itertools.count(1):
+            if Album.objects.filter(slug=self.slug, user=self.user).exists():
+                self.slug = '{}-{}'.format(orig, counter)
+            else:
+                break
         super(Album, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
 
     class Meta:
-        # Users cannot have albums with the same name
+        """Users cannot have albums with the same name. Because of the
+        save method, slugs will always be unique for the user on
+        save, but it is still enforced at the database level.
+        """
         unique_together = (('user', 'slug'), ('user', 'name'))
 
 

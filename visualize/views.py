@@ -9,48 +9,53 @@ from visualize.models import Album, Photo
 
 def visualize(request, album_name_slug=None, album_share_id=None):
     album = None
+
+    # The only way to view an album without logging in is with the UUID
+    # in album.share_id.
     if album_share_id:
-        # Display album - public share id of album
-        print "Album by UUID"
-        pass
+        try:
+            album = Album.objects.get(share_id=album_share_id)
+        except Album.DoesNotExist:
+            error = "Album does not exist with ID of: ", album_share_id
+
     elif request.user.is_authenticated():
+        user = request.user
         if album_name_slug:
-            print "Album by Slug"
-            # Display the album_name_slug album
-            pass
+            try:
+                album = Album.objects.get(slug=album_name_slug, user=user)
+            except Album.DoesNotExist:
+                error = "Album does not exist with slug of: ", album_name_slug
         else:
-            # Get user's first album and display that
-            print "Display user's first album"
-            pass
+
+            # If no slug is provided, try to get the user's first album.
+            try:
+                album = Album.objects.filter(user=user)[0]
+            except IndexError:
+                error = "You do not have any albums yet."
+
+    # User not logged in and did not use a valid share_id
     else:
-        # Not logged in
         return redirect('accounts/login/')
 
-    # Render visualization
     if album:
-        return HttpResponse('A cool visualization: '.format(album))
+        images = Photo.objects.filter(album=album)
+        context_dict = {
+            'user': user,
+            'album': album,
+            'images': images
+        }
+
+    # An album was not found, return the error
     else:
-        return HttpResponse('No album found: '.format(album))
+        context_dict = {'error': error}
+
+    return render(request, 'visualize/test.html', context_dict)
 
 
 @login_required
 def dashboard(request):
+    return HttpResponse("Dashboard")
 
-    # TEST
-    user = request.user
-    album = Album.objects.filter(user=user)
-    images = None
-    if album.exists():
-        album = album[0]
-        images = Photo.objects.filter(album=album)
-
-    context_dict = {
-        'user': user,
-        'album': album,
-        'images': images
-    }
-
-    return render(request, 'visualize/test.html', context_dict)
 
 
 @login_required
@@ -70,6 +75,7 @@ def upload(request):
 
 @login_required
 def upload_image(request):
+    """POST AJAX endpoint for adding a photo to a user's album."""
     if request.method == 'POST':
         user = request.user
         form = NewAlbumForm(request.POST, request.FILES)
@@ -95,12 +101,12 @@ def upload_image(request):
 
 @login_required
 def create_album(request):
+    """POST AJAX endpoint for creating an album."""
     if request.method == 'POST' and request.POST.get('album_name'):
         new_album, created = Album.objects.get_or_create(
             name=request.POST.get('album_name'),
             user=request.user)
         if created:
-            new_album.save()
             return HttpResponse(
                 json.dumps({'success': True, 'error_message': None}),
                 content_type='application/json')

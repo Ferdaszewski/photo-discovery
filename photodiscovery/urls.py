@@ -4,17 +4,17 @@ from django.contrib import admin
 from registration.backends.simple.views import RegistrationView
 
 
-class MyRegistratoinView(RegistrationView):
-    """Redirects user to index page if successful at logging in."""
+class MyRegistrationRedirect(RegistrationView):
+    """Redirects user to main page if success."""
     def get_success_url(self, request, user):
-        return 'visualize'
+        return 'dashboard'
 
 
 urlpatterns = patterns(
     '',
     url(r'^visualize/', include('visualize.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/register/$', MyRegistratoinView.as_view(),
+    url(r'^accounts/register/$', MyRegistrationRedirect.as_view(),
         name='registration_register'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^$', 'visualize.views.visualize'),

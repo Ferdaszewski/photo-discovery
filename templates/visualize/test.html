@@ -5,20 +5,18 @@
 
 {% block body_block %}
 
+{% if album %}
   <h1>Hello {{ user.username }}! Here are your images!</h1>
 
   <h2>{{ album.name }} - Web sized images</h2>
 
-{% if images %}
   <ul class="clearing-thumbs" data-clearing>
     {% for image in images %}
       <li><a href="{% static image.web.url %}"><img src="{% static image.thumbnail.url %}"></a></li>
     {% endfor %}
   </ul>
+{% else %}
+  <p>{{ error }}</p>
 {% endif %}
 
-{% endblock %}
-
-{% block end_body_block %}
-<script>$(document).foundation();</script>
 {% endblock %}
