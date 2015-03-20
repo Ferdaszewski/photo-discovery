@@ -5,10 +5,10 @@ from visualize import views
 urlpatterns = patterns(
     '',
     url(r'^$', views.visualize, name='visualize'),
-    url(r'^album/(?P<album_name_slug>[\w\-]+)/$',
-        views.visualize, name='album_visualize'),
     url(r'^album/(?P<album_share_id>[0-9a-fA-F]{32})/$',
         views.visualize, name='public_album_visualize'),
+    url(r'^album/(?P<album_name_slug>[\w\-]+)/$',
+        views.visualize, name='album_visualize'),
 
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
     url(r'^dashboard/albums/$', views.edit_albums, name='edit_albums'),

@@ -11,13 +11,16 @@ def visualize(request, album_name_slug=None, album_share_id=None):
     album = None
     if album_share_id:
         # Display album - public share id of album
+        print "Album by UUID"
         pass
     elif request.user.is_authenticated():
         if album_name_slug:
+            print "Album by Slug"
             # Display the album_name_slug album
             pass
         else:
             # Get user's first album and display that
+            print "Display user's first album"
             pass
     else:
         # Not logged in
