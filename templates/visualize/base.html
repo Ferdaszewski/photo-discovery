@@ -28,9 +28,12 @@
           <h1 class="title"><a href="{% url 'visualize' %}">Photo Discovery</a></h1>
         </section>
 
-<!--         <section class="right-small">
-          <a class="right-off-canvas-toggle menu-icon" href="#"><span></span></a>
-        </section> -->
+        {% if user.is_authenticated %}
+        <section class="right tab-bar-section">
+          <a href="{% url 'dashboard' %}">Hello {{ user.username }}!</a>
+        </section>
+        {% endif %}
+
       </nav>
 
       <aside class="left-off-canvas-menu">

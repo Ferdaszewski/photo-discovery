@@ -35,12 +35,11 @@ def visualize(request, album_name_slug=None, album_share_id=None):
 
     # User not logged in and did not use a valid share_id
     else:
-        return redirect('accounts/login/')
+        return redirect('/accounts/login/')
 
     if album:
         images = Photo.objects.filter(album=album)
         context_dict = {
-            'user': user,
             'album': album,
             'images': images
         }
@@ -54,7 +53,7 @@ def visualize(request, album_name_slug=None, album_share_id=None):
 
 @login_required
 def dashboard(request):
-    return HttpResponse("Dashboard")
+    return render(request, 'visualize/dashboard.html')
 
 
 
