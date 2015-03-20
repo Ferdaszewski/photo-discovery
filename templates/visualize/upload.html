@@ -2,6 +2,7 @@
 
 {% load staticfiles %}
 
+
 {% block head_block %}
 <!-- production
 <script type="text/javascript" src="../js/plupload.full.min.js"></script>
@@ -15,25 +16,39 @@
 
 {% block body_block %}
   <div>
-    <h1>Upload Files</h1>
+    <h2 class="text-center">Upload Files</h2>
   </div>
 
-  <div id="upload-progress"></div>
-  <ul>  
-    <div id="filelist"></div>
-  </ul>
-
-  <form id="upload-form" method="POST" action="">
-    {% csrf_token %}
-    <label for="album-name">Album Name</label>
-    <input id="album-name" type="text">
-    <button id="file-select">Select Images</button>
-    <button id="upload-btn" type="submit" value="Upload">Start Upload</button>
-  </form>
-
-  <pre id="console">
-    <div id="requirments">Your browser doesn't have Flash, Silverlight, or HTML5 support.</div>
+  <pre class="text-center" id="console">
+    <div id="plupload-requirments">Your browser doesn't have Flash, Silverlight, or HTML5 support.</div>
   </pre>
+
+  <div class="row">
+      <form class="small-12 medium-6 columns" id="upload-form" method="POST" action="">
+        {% csrf_token %}
+        <label for="album-name">Album Name</label>
+        <input id="album-name" type="text">
+        <button class="button small" id="file-select">Select Images</button>
+        <button class="button small" id="upload-btn" type="submit" value="Upload">Start Upload</button>
+      </form>
+
+    <div class="small-12 medium-6 columns">
+      <div class="panel">
+        <h5 class="text-center">Tips and Tricks</h5>
+        <ul>
+          <li>Upload 200+ images for best experience.</li>
+          <li>Images must be jpg files and &lt 10mb.</li>
+          <li>Album names must be unique.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="upload-progress"></div>
+    <ul class="small-block-grid-3 medium-block-grid-5 large-block-grid-7" id="filelist">
+    </ul>
+  </div>
 {% endblock %}
 
 
@@ -100,7 +115,7 @@
       // Plupload custom callback functions
       init: {
         PostInit: function(up) {
-          document.getElementById('requirments').innerHTML = '';
+          document.getElementById('plupload-requirments').innerHTML = '';
 
           document.getElementById('upload-btn').onclick = function() {
 
@@ -116,10 +131,30 @@
             return false;
           };
         },
+
         FilesAdded: function(up, files) {
           plupload.each(files, function(file) {
-            document.getElementById('filelist').innerHTML += '<li id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ')<span class="file-upload-progress"</span></li>';
+
+            // Add li to the DOM for each file selected
+            var li_item = '<li id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ')<span class="file-upload-progress"></span></li>';
+            
+            var item = $( li_item ).prependTo( $( "#filelist" ) );
+            var image = $( new Image() ).prependTo( item );
+
+            // Instantiate the mOxie Image object.
+            var preloader = new mOxie.Image();
+
+            preloader.onload = function() {
+              preloader.downsize(width=180, height=180, crop=true, preserveHeaders=false);
+              image.prop("src", preloader.getAsDataURL());
+
+              // Explicitly destroy the object to release it from memory
+              preloader.destroy();
+            }
+
+            preloader.load(file.getSource());
           });
+
           document.getElementById("file-select").disabled = true;
           up.settings.total_files = up.total.queued;
         },
@@ -136,10 +171,12 @@
         UploadProgress: function(up, file) {
           document.getElementById(file.id).getElementsByClassName('file-upload-progress')[0].innerHTML = " " + file.percent + "%";
         },
+
         FileUploaded: function(up, file) {
           document.getElementById('upload-progress').innerHTML = 
           "<span>" + up.total.uploaded + "/" + up.settings.total_files + " - " + up.total.percent + "%</span>"
         },
+
         Error: function(up, err) {
           document.getElementById('console').appendChild(document.createTextNode("\nError #" + err.code + ": " + err.message));
         }

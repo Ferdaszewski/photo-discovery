@@ -1,6 +1,7 @@
 """
 Django settings for photodiscovery project.
 """
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 from django.core.exceptions import ImproperlyConfigured
 import json
 import os
@@ -66,6 +67,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+
+# Add current user's albums to the template render context.
+TEMPLATE_CONTEXT_PROCESSORS += ('visualize.custom_processors.albums',)
 
 
 # URL root and WSGI app

@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.template.defaultfilters import slugify
+
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, SmartResize
 import uuid
@@ -21,16 +23,22 @@ def create_uuid():
 
 
 class Album(models.Model):
-    """User album to hold photos for the visualization."""
+    """User album holds photos."""
+    share_id = models.CharField(max_length=32, default=create_uuid)
     user = models.ForeignKey(User)
     name = models.CharField(max_length=32, blank=False)
+    slug = models.SlugField()
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Album, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
 
     class Meta:
         # Users cannot have albums with the same name
-        unique_together = ('user', 'name')
+        unique_together = (('user', 'slug'), ('user', 'name'))
 
 
 class Photo(models.Model):

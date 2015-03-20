@@ -4,10 +4,11 @@ from django.contrib import admin
 from registration.backends.simple.views import RegistrationView
 
 
-# Redirects user to index page if successful at logging in
 class MyRegistratoinView(RegistrationView):
+    """Redirects user to index page if successful at logging in."""
     def get_success_url(self, request, user):
-        return '/visualize/'
+        return 'visualize'
+
 
 urlpatterns = patterns(
     '',
@@ -16,8 +17,9 @@ urlpatterns = patterns(
     url(r'^accounts/register/$', MyRegistratoinView.as_view(),
         name='registration_register'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
-    url(r'^$', 'visualize.views.index'),
+    url(r'^$', 'visualize.views.visualize'),
     )
+
 
 if settings.DEBUG:
     urlpatterns += patterns(

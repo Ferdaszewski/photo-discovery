@@ -7,14 +7,27 @@ from visualize.forms import NewAlbumForm
 from visualize.models import Album, Photo
 
 
-@login_required
-def index(request):
-    """Returns the main dashboard for logged in users."""
-    return HttpResponse('Index!')
+def visualize(request, album_name_slug=None, album_share_id=None):
+    album = None
+    if album_share_id:
+        # Display album - public share id of album
+        pass
+    elif request.user.is_authenticated():
+        if album_name_slug:
+            # Display the album_name_slug album
+            pass
+        else:
+            # Get user's first album and display that
+            pass
+    else:
+        # Not logged in
+        return redirect('accounts/login/')
 
-
-def visualize(request):
-    return HttpResponse('A cool visualization!')
+    # Render visualization
+    if album:
+        return HttpResponse('A cool visualization: '.format(album))
+    else:
+        return HttpResponse('No album found: '.format(album))
 
 
 @login_required
@@ -22,8 +35,11 @@ def dashboard(request):
 
     # TEST
     user = request.user
-    album = Album.objects.filter(user=user)[0]
-    images = Photo.objects.filter(album=album)
+    album = Album.objects.filter(user=user)
+    images = None
+    if album.exists():
+        album = album[0]
+        images = Photo.objects.filter(album=album)
 
     context_dict = {
         'user': user,
@@ -32,6 +48,16 @@ def dashboard(request):
     }
 
     return render(request, 'visualize/test.html', context_dict)
+
+
+@login_required
+def edit_albums(request):
+    return HttpResponse("Edit your albums here.")
+
+
+@login_required
+def edit_album(request, album_name_slug):
+    return HttpResponse("Edit your album: {} here".format(album_name_slug))
 
 
 @login_required

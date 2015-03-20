@@ -17,12 +17,64 @@
 </head>
 <body>
 
-{% block body_block %}{% endblock %}
+  <div class="off-canvas-wrap" data-offcanvas>
+    <div class="inner-wrap">      
+      <nav class="tab-bar">
+        <section class="left-small">
+          <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
+        </section>
+
+        <section class="middle tab-bar-section">
+          <h1 class="title"><a href="{% url 'visualize' %}">Photo Discovery</a></h1>
+        </section>
+
+<!--         <section class="right-small">
+          <a class="right-off-canvas-toggle menu-icon" href="#"><span></span></a>
+        </section> -->
+      </nav>
+
+      <aside class="left-off-canvas-menu">
+        <ul class="off-canvas-list">
+
+        {% if user.is_authenticated %}
+          <li><label>Albums</label></li>
+          {% for album in albums %}
+            <li><a href="{% url 'album_visualize' album_name_slug=album.slug %}">{{ album.name }}</a></li>
+          {% endfor %}
+          <li><a href="{% url 'upload' %}">Create a new album</a></li>
+        {% endif %}
+
+          <li><label>Settings</label></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'edit_albums' %}">Your Albums</a></li>
+          <li><a href="{% url 'auth_logout' %}">Logout</a></li>
+          <li><a href="{% url 'dashboard' %}">User Settings</a></li>
+        {% else %}
+          <li><a href="{% url 'auth_login' %}">Login</a></li>
+          <li><a href="{% url 'registration_register' %}">Create Account</a></li>
+        {% endif %}
+        </ul>
+      </aside>
+
+<!--       <aside class="right-off-canvas-menu">
+        <ul class="off-canvas-list">
+          <li><label>Visualizations</label></li>
+          <li><a href="#">More coming soon!</a></li>
+        </ul>
+      </aside> -->
+
+      <section class="main-section">
+        {% block body_block %}{% endblock %}
+      </section>
+
+      <a class="exit-off-canvas"></a>
+    </div>
+  </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="{% static 'foundation/js/foundation.min.js' %}"></script>
 
 {% block end_body_block %}{% endblock %}
-
+<script>$(document).foundation();</script>
 </body>
 </html>
