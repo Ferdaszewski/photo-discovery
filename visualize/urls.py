@@ -4,7 +4,7 @@ from visualize import views
 
 urlpatterns = patterns(
     '',
-    url(r'^$', views.visualize, name='visualize'),
+    url(r'^$', views.visualize),
     url(r'^album/(?P<album_share_id>[0-9a-fA-F]{32})/$',
         views.visualize, name='public_album_visualize'),
     url(r'^album/(?P<album_name_slug>[\w\-]+)/$',

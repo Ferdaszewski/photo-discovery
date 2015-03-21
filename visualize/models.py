@@ -95,6 +95,14 @@ class Photo(models.Model):
     width = models.IntegerField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        """Generate web and thumbnail resolution versions of the image
+        in the Cache.
+        """
+        super(Photo, self).save(*args, **kwargs)
+        self.web.generate()
+        self.thumbnail.generate()
+
     def __unicode__(self):
         return self.original_name
 

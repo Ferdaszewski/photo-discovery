@@ -19,7 +19,7 @@ urlpatterns = patterns(
         name='registration_register'),
     url(r'^accounts/password/change/done/$', 'visualize.views.visualize'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
-    url(r'^$', 'visualize.views.visualize'),
+    url(r'^$', 'visualize.views.visualize', name='visualize'),
     )
 
 

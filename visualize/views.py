@@ -25,11 +25,16 @@ def visualize(request, album_name_slug=None, album_share_id=None):
                 album = Album.objects.get(slug=album_name_slug, user=user)
             except Album.DoesNotExist:
                 error = "Album does not exist with slug of: ", album_name_slug
-        else:
 
-            # If no slug is provided, try to get the user's first album.
+        # If no slug is provided, try to get the user's first album.
+        else:
             try:
                 album = Album.objects.filter(user=user)[0]
+
+                # Redirect so user sees the correct slug url
+                return redirect('album_visualize',
+                                album_name_slug=album.slug)
+
             except IndexError:
                 error = "You do not have any albums yet."
 
@@ -54,7 +59,6 @@ def visualize(request, album_name_slug=None, album_share_id=None):
 @login_required
 def dashboard(request):
     return render(request, 'visualize/dashboard.html')
-
 
 
 @login_required
