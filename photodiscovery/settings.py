@@ -10,14 +10,14 @@ import os
 # Project paths and directories
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
-STATIC_PATH = os.path.join(BASE_DIR, 'static')
+STATIC_PATH = os.path.join(BASE_DIR, 'static/')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (STATIC_PATH,)
 
-TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
+TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates/')
 TEMPLATE_DIRS = (TEMPLATE_PATH,)
 
 
