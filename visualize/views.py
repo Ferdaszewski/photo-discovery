@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 import json
 
@@ -68,7 +68,21 @@ def edit_albums(request):
 
 @login_required
 def edit_album(request, album_name_slug):
-    return HttpResponse("Edit your album: {} here".format(album_name_slug))
+    user = request.user
+    try:
+        album = Album.objects.get(slug=album_name_slug, user=user)
+    except Album.DoesNotExist:
+        raise Http404
+
+    photos = Photo.objects.filter(album=album)
+
+    print photos[0].original.path
+
+    context_dict = {
+        'album': album,
+        'photos': photos,
+    }
+    return render(request, 'visualize/update_album.html', context_dict)
 
 
 @login_required

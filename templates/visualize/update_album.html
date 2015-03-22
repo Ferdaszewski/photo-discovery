@@ -1,0 +1,22 @@
+{% extends "visualize/base.html" %}
+
+{% load staticfiles %}
+
+{% block body_block %}
+  <h1 class="text-center">{{ album.name }}</h1>
+
+{% if photos %}
+    <div class="row">
+      <ul class="small-block-grid-3 medium-block-grid-5 large-block-grid-7">
+      {% for photo in photos %}
+        <li><a class="th" href="{{ photo.original.url }}">
+          <img class="column small-centered" src="{{ photo.thumbnail.url }}">
+          <a class="button tiny alert expand" href="">Delete</a>
+        </a></li>
+      {% endfor %}
+      </ul>
+    </div>
+{% else %}
+  <p>You don't have any photos in this album!</p>
+{% endif %}
+{% endblock %}

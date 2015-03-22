@@ -11,7 +11,7 @@
 
   <ul class="clearing-thumbs" data-clearing>
     {% for image in images %}
-      <li><a href="{% static image.web.url %}"><img src="{% static image.thumbnail.url %}"></a></li>
+      <li><a href="{{ image.web.url }}"><img src="{{ image.thumbnail.url }}"></a></li>
     {% endfor %}
   </ul>
 {% else %}
