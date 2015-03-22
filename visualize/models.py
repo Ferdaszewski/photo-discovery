@@ -43,6 +43,10 @@ class Album(models.Model):
                 break
         super(Album, self).save(*args, **kwargs)
 
+    def photo_count(self):
+        """Returns the number of images in the album (int)."""
+        return Photo.objects.filter(album=self).count()
+
     def __unicode__(self):
         return self.name
 
@@ -97,7 +101,7 @@ class Photo(models.Model):
 
     def save(self, *args, **kwargs):
         """Generate web and thumbnail resolution versions of the image
-        in the Cache.
+        in the Imagekit Cache.
         """
         super(Photo, self).save(*args, **kwargs)
         self.web.generate()

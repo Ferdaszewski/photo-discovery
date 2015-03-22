@@ -1,0 +1,30 @@
+{% extends "visualize/base.html" %}
+
+{% load staticfiles %}
+
+{% block body_block %}
+  <h1>Your Albums</h1>
+
+{% if albums %}
+  {% for album in albums %}
+  <ul>
+    <li>
+      <a href="">
+        <span class="button tiny alert">Delete</span>
+      </a>
+      <a href="{% url 'edit_album' album_name_slug=album.slug %}">
+        <span class="button tiny">Edit</span>
+      </a>
+      <a href="{% url 'album_visualize' album_name_slug=album.slug %}">
+        <span class="button tiny success">View</span>
+      </a>
+      <a href="{% url 'album_visualize' album_name_slug=album.slug %}">
+        {{ album.name }} <span class="secondary round label">{{ album.photo_count }} Photos</span>
+      </a>
+    </li>
+  </ul>
+  {% endfor %}
+{% else %}
+  <p>You don't have any Albums yet, <a href="{% url 'upload' %}">create one</a>!</p>
+{% endif %}
+{% endblock %}

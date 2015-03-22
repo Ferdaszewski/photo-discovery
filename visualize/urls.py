@@ -11,8 +11,8 @@ urlpatterns = patterns(
         views.visualize, name='album_visualize'),
 
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
-    url(r'^dashboard/albums/$', views.edit_albums, name='edit_albums'),
-    url(r'^dashboard/album/(?P<album_name_slug>[\w\-]+)/$',
+    url(r'^dashboard/edit/albums/$', views.edit_albums, name='edit_albums'),
+    url(r'^dashboard/edit/album/(?P<album_name_slug>[\w\-]+)/$',
         views.edit_album, name='edit_album'),
 
     url(r'^upload/$', views.upload, name='upload'),

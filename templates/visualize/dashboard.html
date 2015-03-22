@@ -1,10 +1,13 @@
 {% extends "visualize/base.html" %}
 
 {% load staticfiles %}
-{% load imagekit %}
 
 {% block body_block %}
-<a href="{% url 'auth_password_change' %}">Change your password</a>
-
-
+  <h2>User Dashboard</h2>
+  <h3 class="subheader">Hello {{ user.username }}!</h3>
+  <ul>    
+    <li><a href="{% url 'auth_password_change' %}">Change your password</a></li>
+    <li><a href="{% url 'edit_albums' %}">View and Edit your Albums</a></li>
+    <li><a href="{% url 'upload' %}">Create a new Album</a></li>
+  </ul>
 {% endblock %}

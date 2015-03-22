@@ -63,7 +63,7 @@ def dashboard(request):
 
 @login_required
 def edit_albums(request):
-    return HttpResponse("Edit your albums here.")
+    return render(request, 'visualize/update_albums.html')
 
 
 @login_required
@@ -73,7 +73,7 @@ def edit_album(request, album_name_slug):
 
 @login_required
 def upload(request):
-    return render(request, 'visualize/upload.html', {})
+    return render(request, 'visualize/upload.html')
 
 
 @login_required
