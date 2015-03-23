@@ -32,7 +32,8 @@
           <a href="#">My Albums</a>
           <ul class="dropdown">
             {% for album_in_list in albums %}
-              <li {% if album.slug == album_in_list.slug %}class="active"{% endif %}>
+              
+              <li class="{% if album.slug == album_in_list.slug %}active {% endif %}{{ album_in_list.share_id }}">
                 <a href="{% url 'album_visualize' album_name_slug=album_in_list.slug %}">
                   {{ album_in_list.name }}
                 </a>

@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 
 from imagekit.models import ImageSpecField
@@ -13,7 +15,7 @@ def create_file_path(instance, filename):
     album_id = instance.album.id
     new_filename = instance.photo_id + '.' + filename.split('.')[-1]
 
-    return 'images/{0}/{1}'.format(album_id, new_filename)
+    return 'original_images/{1}'.format(album_id, new_filename)
 
 
 def create_uuid():
@@ -120,3 +122,20 @@ class VisualizationMetadata(models.Model):
 
     def __unicode__(self):
         return self.image_file
+
+
+@receiver(post_delete, sender=Photo)
+def photo_post_delete_handler(sender, instance, **kwargs):
+    """Delete image files from storage when a photo is deleted from the
+    database.
+    """
+
+    # Delete the original file from storage.
+    storage = instance.original.storage
+    name = instance.original.name
+    storage.delete(name)
+
+    # Delete the Imagekit files from storage.
+    storage = instance.web.storage
+    storage.delete(instance.web.name)
+    storage.delete(instance.thumbnail.name)

@@ -6,11 +6,11 @@
   <h1>Your Albums</h1>
 
 {% if albums %}
+  <ul  id="album-wrapper">
   {% for album in albums %}
-  <ul>
-    <li>
+    <li class="{{ album.share_id }}">
       <a href="">
-        <span class="button tiny alert">Delete</span>
+        <span class="button tiny alert delete-btn" data-album-id="{{ album.id }}">Delete</span>
       </a>
       <a href="{% url 'edit_album' album_name_slug=album.slug %}">
         <span class="button tiny">Edit</span>
@@ -22,9 +22,13 @@
         {{ album.name }} <span class="secondary round label">{{ album.photo_count }} Photos</span>
       </a>
     </li>
-  </ul>
   {% endfor %}
+  </ul>
 {% else %}
-  <p>You don't have any Albums yet, <a href="{% url 'upload' %}">create one</a>!</p>
+  <p>You don't have any Albums, <a href="{% url 'upload' %}">create one</a>!</p>
 {% endif %}
+{% endblock %}
+
+{% block end_body_block %}
+<script src="{% static 'js/update_albums.js' %}"></script>
 {% endblock %}

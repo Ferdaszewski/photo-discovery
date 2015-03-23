@@ -53,7 +53,7 @@ def visualize(request, album_name_slug=None, album_share_id=None):
     else:
         context_dict = {'error': error}
 
-    return render(request, 'visualize/test.html', context_dict)
+    return render(request, 'visualize/visualize.html', context_dict)
 
 
 @login_required
@@ -63,7 +63,18 @@ def dashboard(request):
 
 @login_required
 def edit_albums(request):
-    return render(request, 'visualize/update_albums.html')
+    """On GET display all the user's albums. POST is an AJAX call to
+    delete an album.
+    """
+    if request.method == 'POST':
+        user = request.user
+        album_id = request.POST['id']
+        album = Album.objects.get(user=user, id=album_id)
+        album.delete()
+        return HttpResponse(json.dumps({'OK': 1, 'share_id': album.share_id}),
+                            content_type="application/json")
+    else:
+        return render(request, 'visualize/update_albums.html')
 
 
 @login_required
