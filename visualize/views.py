@@ -79,21 +79,31 @@ def edit_albums(request):
 
 @login_required
 def edit_album(request, album_name_slug):
+    """On GET display all the user's phots in the album. POST is and
+    AJAX call to delete a photo from the album.
+    """
     user = request.user
     try:
         album = Album.objects.get(slug=album_name_slug, user=user)
     except Album.DoesNotExist:
         raise Http404
 
-    photos = Photo.objects.filter(album=album)
+    # POST is send to delete a photo from an album
+    if request.method == 'POST':
+        photo_id = request.POST['id']
+        photo = Photo.objects.get(album=album, photo_id=photo_id)
+        photo.delete()
+        return HttpResponse(json.dumps({'OK': 1}),
+                            content_type="application/json")
 
-    print photos[0].original.path
-
-    context_dict = {
-        'album': album,
-        'photos': photos,
-    }
-    return render(request, 'visualize/update_album.html', context_dict)
+    # Not POST, so get album photos and display
+    else:
+        photos = Photo.objects.filter(album=album)
+        context_dict = {
+            'album': album,
+            'photos': photos,
+        }
+        return render(request, 'visualize/update_album.html', context_dict)
 
 
 @login_required

@@ -125,17 +125,19 @@ class VisualizationMetadata(models.Model):
 
 
 @receiver(post_delete, sender=Photo)
-def photo_post_delete_handler(sender, instance, **kwargs):
-    """Delete image files from storage when a photo is deleted from the
+def photo_post_delete_handler(sender, **kwargs):
+    """Delete image files from storage after a photo is deleted from the
     database.
     """
+    instance = kwargs.get('instance', None)
 
-    # Delete the original file from storage.
-    storage = instance.original.storage
-    name = instance.original.name
-    storage.delete(name)
+    if instance:
+        # Delete the original file from storage.
+        storage = instance.original.storage
+        name = instance.original.name
+        storage.delete(name)
 
-    # Delete the Imagekit files from storage.
-    storage = instance.web.storage
-    storage.delete(instance.web.name)
-    storage.delete(instance.thumbnail.name)
+        # Delete the Imagekit files from storage.
+        storage = instance.web.storage
+        storage.delete(instance.web.name)
+        storage.delete(instance.thumbnail.name)
