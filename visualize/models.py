@@ -101,7 +101,7 @@ class Photo(models.Model):
 
     def save(self, *args, **kwargs):
         """Generate web and thumbnail resolution versions of the image
-        in the Imagekit Cache.
+        and save in the Imagekit Cache.
         """
         super(Photo, self).save(*args, **kwargs)
         self.web.generate()
@@ -111,14 +111,23 @@ class Photo(models.Model):
         return self.original_name
 
 
-class VisualizationMetadata(models.Model):
+class Metadata(models.Model):
     """Information from the processing of photos."""
-    image_file = models.ForeignKey(Photo)
+    image_file = models.OneToOneField(Photo)
 
-    # Average Color visualization data
-    # Hex RBG of the average image color
-    ac_hex_color_avg = models.CharField(max_length=6)
-    ac_color_sort_order = models.IntegerField()
+    # Primary Color visualization data
+    # Web Hex RBG of the primary image color (i.e. '#fa0319')
+    pc_hex = models.CharField(max_length=7)
+
+    # YIQ conversion from the RGB values. Used for ordering by color
+    pc_y = models.FloatField()
+    pc_i = models.FloatField()
+    pc_q = models.FloatField()
+
+    # HSL converted from the RGB. Used for ordering by color
+    pc_h = models.FloatField()
+    pc_s = models.FloatField()
+    pc_l = models.FloatField()
 
     def __unicode__(self):
         return self.image_file

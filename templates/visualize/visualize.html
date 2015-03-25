@@ -11,7 +11,10 @@
 
   <ul class="clearing-thumbs" data-clearing>
     {% for image in images %}
-      <li><a href="{{ image.web.url }}"><img src="{{ image.thumbnail.url }}"></a></li>
+      <li style="background-color: {{ image.metadata.pc_hex }};">
+        <a href="{{ image.web.url }}"><img src="{{ image.thumbnail.url }}"></a>
+        <p>{{ image.metadata.pc_hex }}</p>
+      </li>
     {% endfor %}
   </ul>
   <a href="{% url 'public_album_visualize' album_share_id=album.share_id %}">Share this album</a>

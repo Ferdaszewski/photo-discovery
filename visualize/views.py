@@ -4,7 +4,26 @@ from django.shortcuts import redirect, render
 import json
 
 from visualize.forms import NewAlbumForm
+from visualize.image_processors import process_image
 from visualize.models import Album, Photo
+
+
+def round_float(photo):
+    """Helper function that returns the photo.metadata attribute rounded
+    down. For use when sorting photos by color."""
+
+    # Column names to sort by and the precision
+    sort_by = [('pc_h', 1), ('pc_i', 4), ('pc_q', 0)]
+
+    sort_values = [round(getattr(photo.metadata, attr[0]), attr[1])
+                   for attr in sort_by]
+    return sort_values
+
+
+def sort_photos(photo_list):
+    """Sorts a list of Photo objects in place by color."""
+    sorted_photo_list = sorted(photo_list, key=round_float)
+    return sorted_photo_list
 
 
 def visualize(request, album_name_slug=None, album_share_id=None):
@@ -43,7 +62,15 @@ def visualize(request, album_name_slug=None, album_share_id=None):
         return redirect('/accounts/login/')
 
     if album:
+
+        # Order by YIQ to get a visually smooth sort order.
+        # The alternatives (RGB or HSV) do not look sorted as they are
+        # not based on human perception of color.
         images = Photo.objects.filter(album=album)
+
+        # Sorts the list of Photo Objects by color
+        images = sort_photos(images)
+
         context_dict = {
             'album': album,
             'images': images
@@ -130,6 +157,9 @@ def upload_image(request):
             new_photo.album = album
             new_photo.original_name = str(form_data['image'].name)
             new_photo.save()
+
+            # Process image
+            process_image(new_photo)
 
         return HttpResponse(json.dumps({'OK': 1}),
                             content_type="application/json")
