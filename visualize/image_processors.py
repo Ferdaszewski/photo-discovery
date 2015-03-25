@@ -21,8 +21,8 @@ def webhex_to_rgb(hexrgb):
 
 
 def process_image(photo):
-    """Run all the necessary calculations for an image and save the data
-    to the metadata model."""
+    """Run all the necessary calculations for an Photo object and save
+    the data to the metadata model."""
     file_path = photo.original.path
 
     # Primary Color Visualization metadata

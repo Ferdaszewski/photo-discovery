@@ -11,9 +11,10 @@
 
   <link rel="stylesheet" href="{% static 'foundation/css/normalize.css' %}">
   <link rel="stylesheet" href="{% static 'foundation/css/foundation.css' %}">
+  {% block head_link %}{% endblock %}
+
   <script src="{% static 'foundation/js/vendor/modernizr.js' %}"></script>
-  <script src="{% static 'js/main.js' %}"></script>
-  {% block head_block %}{% endblock %}
+  {% block head_script %}{% endblock %}
 
 </head>
 <body>
@@ -63,8 +64,9 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="{% static 'foundation/js/foundation.min.js' %}"></script>
-
+<script src="{% static 'js/main.js' %}"></script>
 {% block end_body_block %}{% endblock %}
+
 <script>$(document).foundation();</script>
 </body>
 </html>

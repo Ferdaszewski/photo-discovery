@@ -13,7 +13,8 @@ secrets.json
 **/skeleton/*
 **/plupload/*
 **/foundation/*
-media/*
+**/media/*
+**/img/*
 
 
 # Github Python boilerplate

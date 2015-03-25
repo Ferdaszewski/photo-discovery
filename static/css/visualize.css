@@ -1,0 +1,13 @@
+#pre-load {
+  text-align: center;
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  top: 25%;
+  width: 100%;
+}
+
+#pre-load img {
+  display: block;
+  margin: auto;
+}

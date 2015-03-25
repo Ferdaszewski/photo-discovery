@@ -31,7 +31,7 @@ class Album(models.Model):
     slug = models.SlugField()
 
     def save(self, *args, **kwargs):
-        """Uniqueness is only guaranteed with user and name. But 
+        """Uniqueness is only guaranteed with user and name. But
         different names can result in the same slug. This function
         ensures automatically that a user's slug is unique to them.
         """
