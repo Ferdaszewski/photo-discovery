@@ -1,3 +1,7 @@
+body {
+  transition: all .1s;
+}
+
 #pre-load {
   text-align: center;
   position: fixed;
@@ -8,6 +12,40 @@
 }
 
 #pre-load img {
+  display: block;
+  margin: auto;
+}
+
+#album-wrapper {
+    position: relative;
+    display: block;
+}
+
+#album-inner {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#album-inner > * {
+    display:block;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#album-inner .as-current {
+    opacity: .85;
+}
+
+#album-wrapper.smooth #album-inner > * {
+    transition: all .2s ease;
+}
+
+.ac-image {
   display: block;
   margin: auto;
 }

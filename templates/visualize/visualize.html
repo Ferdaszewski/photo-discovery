@@ -17,17 +17,20 @@
   <img src="{% static 'img/preloader.gif' %}">
 </div>
 
-<ul class="hide" id="album-wrapper">
+<div id="album-wrapper" class="smooth">
+  <div id="album-inner">
 
   {% for image in images %}
-    <li style="background-color: {{ image.metadata.pc_hex }};">
-      <img src="{{ image.web.url }}">
-      <p>{{ image.metadata.pc_hex }}</p>
-    </li>
+    <div class="image-wrapper" data-hexrgb="{{ image.metadata.pc_hex }}">
+      <img class="ac-image" src="{{ image.web.url }}" alt="{{ image.original_name }}">
+    </div>
   {% endfor %}
 
-</ul>
+  </div>
+</div>
+
 <a href="{% url 'public_album_visualize' album_share_id=album.share_id %}">Share this album</a>
+
 {% else %}
   <p>{{ error }}</p>
 {% endif %}
