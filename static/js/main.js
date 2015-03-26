@@ -1,3 +1,5 @@
+// Utility function to get a user's cookie.
+// Primarily used to get the Django CSRF token for AJAX.
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {

@@ -41,20 +41,3 @@
 <script src="{% static 'imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
 <script src="{% static 'js/visualize.js' %}"></script>
 {% endblock %}
-
-
-
-
-
-<!--   <h1>Hello {{ user.username }}! Here are your images!</h1>
-
-  <h2>{{ album.name }} - Web sized images</h2>
-
-  <ul class="clearing-thumbs" data-clearing>
-    {% for image in images %}
-      <li style="background-color: {{ image.metadata.pc_hex }};">
-        <a href="{{ image.web.url }}"><img src="{{ image.thumbnail.url }}"></a>
-        <p>{{ image.metadata.pc_hex }}</p>
-      </li>
-    {% endfor %}
-  </ul>
