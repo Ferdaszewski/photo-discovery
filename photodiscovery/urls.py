@@ -17,7 +17,8 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/register/$', MyRedirect.as_view(),
         name='registration_register'),
-    url(r'^accounts/password/change/done/$', 'visualize.views.visualize'),
+    url(r'^accounts/password/change/done/$',
+        'visualize.views.visualize'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^$', 'visualize.views.visualize', name='visualize'),
     )

@@ -40,6 +40,7 @@
                   {{ album_in_list.name }}
                 </a>
               </li>
+
             {% endfor %}
             <li class="divider"></li>
             <li><a href="{% url 'upload' %}">Create a new album</a></li>
@@ -52,7 +53,7 @@
       <ul class="right">
       {% if user.is_authenticated %}
         <li><a href="{% url 'dashboard' %}">Hello {{ user.username }}!</a></li>
-        <li><a href="{% url 'auth_logout' %}">Logout</a></li>
+        <li><a href="{% url 'auth_logout' %}?next=/visualize">Logout</a></li>
       {% else %}
         <li><a href="{% url 'auth_login' %}">Login</a></li>
       {% endif %}

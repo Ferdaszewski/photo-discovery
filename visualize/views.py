@@ -8,21 +8,22 @@ from visualize.image_processors import process_image
 from visualize.models import Album, Photo
 
 
-def round_float(photo):
-    """Helper function that returns the photo.metadata attribute rounded
-    down. For use when sorting photos by color."""
+def sort_by(photo):
+    """Helper function that returns the photo.metadata attributes as a
+    tuple with their values rounded down. For use when sorting photos
+    by color.
+    """
+    # Column names to sort by and the precision to round the values to.
+    sort_list = [('pc_h', 1), ('pc_i', 4), ('pc_q', 0)]
 
-    # Column names to sort by and the precision
-    sort_by = [('pc_h', 1), ('pc_i', 4), ('pc_q', 0)]
-
-    sort_values = [round(getattr(photo.metadata, attr[0]), attr[1])
-                   for attr in sort_by]
+    sort_values = [round(getattr(photo.metadata, i[0]), i[1])
+                   for i in sort_list]
     return sort_values
 
 
 def sort_photos(photo_list):
     """Sorts a list of Photo objects in place by color."""
-    sorted_photo_list = sorted(photo_list, key=round_float)
+    sorted_photo_list = sorted(photo_list, key=sort_by)
     return sorted_photo_list
 
 

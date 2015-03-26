@@ -3,8 +3,8 @@
 {% block title %}Logout{% endblock %}
 
 {% block body_block %}
-  <div>
-    <h1>Logged Out</h1>
+  <div class="text-center">
+    <h2>You are Logged Out!</h2>
+    <p>Want to <a href="{% url 'auth_login' %}">login</a> again?</p>
   </div>
-  <p>You are now logged out.</p>
 {% endblock %}
