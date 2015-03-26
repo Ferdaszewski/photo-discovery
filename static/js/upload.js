@@ -6,10 +6,10 @@ function start_upload(up, name) {
 
   // Ajax call to create album, display error if album name is not unique
   $.ajax({
-    url: "{% url 'create_album' %}",
+    url: "album/",
     data: {
       album_name: name,
-      csrfmiddlewaretoken: "{{ csrf_token }}"
+      csrfmiddlewaretoken: getCookie('csrftoken')
     },
     type: "POST",
     dataType: "json",
@@ -49,10 +49,10 @@ var uploader = new plupload.Uploader({
   // Plupload settings
   runtimes: 'html5,flash,silverlight',
   browse_button: 'file-select',
-  url : "{% url 'upload_image' %}",
+  url : "/visualize/upload/image/",
   file_data_name:'image',
-  flash_swf_url: "{% static 'plupload/js/Moxie.swf' %}",
-  silverlight_xap_url: "{% static 'plupload/js/Moxie.xap' %}",
+  flash_swf_url: "/static/plupload/js/Moxie.swf",
+  silverlight_xap_url: "/static/plupload/js/Moxie.xap",
   
   // Jpgs under 10mb only
   filters: {
@@ -125,7 +125,7 @@ var uploader = new plupload.Uploader({
       });
 
       up.settings.multipart_params = {
-        csrfmiddlewaretoken: "{{ csrf_token }}",
+        csrfmiddlewaretoken: getCookie('csrftoken'),
         album_name: up.settings.album_name
       };
     },

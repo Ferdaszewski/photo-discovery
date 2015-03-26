@@ -3,14 +3,17 @@
 {% load staticfiles %}
 
 {% block body_block %}
-  <h1 class="text-center">{{ album.name }}</h1>
+  <h2 class="text-center">
+    {{ album.name }}<br>
+    <small><a href="{% url 'edit_albums' %}">Back to Albums</a></small>
+  </h2>
 
 {% if photos %}
     <div class="row">
       <ul class="small-block-grid-3 medium-block-grid-5 large-block-grid-7" id="photo-wrapper">
       {% for photo in photos %}
         <li class="{{ photo.photo_id }}">
-          <a class="th" href="{{ photo.original.url }}">
+          <a class="th" href="{{ photo.original.url }}" style="background-color: {{ photo.metadata.pc_hex }}">
             <img class="column small-centered" src="{{ photo.thumbnail.url }}">
             <a class="button tiny alert expand delete-btn" data-photo-id="{{ photo.photo_id }}" href="#">Delete</a>
           </a>
@@ -19,7 +22,7 @@
       </ul>
     </div>
 {% else %}
-  <p>You don't have any photos in this album!</p>
+  <p class="text-center">You don't have any photos in this album!</p>
 {% endif %}
 {% endblock %}
 

@@ -74,7 +74,7 @@ def visualize(request, album_name_slug=None, album_share_id=None):
 
         context_dict = {
             'album': album,
-            'images': images
+            'images': images,
         }
 
     # An album was not found, return the error

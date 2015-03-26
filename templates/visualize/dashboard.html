@@ -3,11 +3,19 @@
 {% load staticfiles %}
 
 {% block body_block %}
-  <h2>User Dashboard</h2>
-  <h3 class="subheader">Hello {{ user.username }}!</h3>
-  <ul>    
-    <li><a href="{% url 'auth_password_change' %}">Change your password</a></li>
-    <li><a href="{% url 'edit_albums' %}">View and Edit your Albums</a></li>
-    <li><a href="{% url 'upload' %}">Create a new Album</a></li>
-  </ul>
+  <div class="row">
+    <div class="small-8 small-centered columns">
+      <h2 class="text-center">
+        User Dashboard<br>
+        <small>Hello {{ user.username }}!</small>
+      </h2>
+
+      <ul class="panel">    
+        <li><a href="{% url 'auth_password_change' %}">Change your password</a></li>
+        <li><a href="{% url 'edit_albums' %}">View and Edit your Albums</a></li>
+        <li><a href="{% url 'upload' %}">Create a new Album</a></li>
+      </ul>
+
+    </div>
+  </div>
 {% endblock %}

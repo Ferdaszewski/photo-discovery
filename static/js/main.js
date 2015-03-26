@@ -15,3 +15,8 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+// Select text when user clicks in the field
+$('.share_url').on('mouseup', function() {
+    $(this).select();
+});

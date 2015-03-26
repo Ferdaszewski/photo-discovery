@@ -3,30 +3,67 @@
 {% load staticfiles %}
 
 {% block body_block %}
-  <h1>Your Albums</h1>
+  <div class="row">
 
-{% if albums %}
-  <ul  id="album-wrapper">
-  {% for album in albums %}
-    <li class="{{ album.share_id }}">
-      <a href="">
-        <span class="button tiny alert delete-btn" data-album-id="{{ album.id }}">Delete</span>
-      </a>
-      <a href="{% url 'edit_album' album_name_slug=album.slug %}">
-        <span class="button tiny">Edit</span>
-      </a>
-      <a href="{% url 'album_visualize' album_name_slug=album.slug %}">
-        <span class="button tiny success">View</span>
-      </a>
-      <a href="{% url 'album_visualize' album_name_slug=album.slug %}">
-        {{ album.name }} <span class="secondary round label">{{ album.photo_count }} Photos</span>
-      </a>
-    </li>
-  {% endfor %}
-  </ul>
-{% else %}
-  <p>You don't have any Albums, <a href="{% url 'upload' %}">create one</a>!</p>
-{% endif %}
+    <div class="small-12 columns">
+      <h2 class="text-center">Edit Your Albums</h2>
+
+      {% if albums %}
+      <ul  class="small-block-grid-3 text-center" id="album-wrapper">
+      {% for album in albums %}
+        <li class="{{ album.share_id }}">
+          <div class="panel">
+
+            <h5>
+              <a href="{% url 'edit_album' album_name_slug=album.slug %}">
+                {{ album.name }} <span class="secondary round label">{{ album.photo_count }}</span>
+              </a>
+            </h5>
+
+            <label>
+              Share URL, click to select:
+              <input class="share_url" type="text" value="{{ request.get_host }}{% url 'public_album_visualize' album_share_id=album.share_id %}" readonly="readonly" name="share_url">
+            </label>
+
+            <ul class="button-group radius even-3">
+              <li>
+                <a href="#">
+                  <span class="button tiny alert delete-btn" data-album-id="{{ album.id }}">Delete</span>
+                </a>
+              </li>
+
+              <li>
+                <a href="{% url 'edit_album' album_name_slug=album.slug %}">
+                  <span class="button tiny">Edit</span>
+                </a>
+              </li>
+
+              <li>
+                <a href="{% url 'album_visualize' album_name_slug=album.slug %}">
+                  <span class="button tiny success">View</span>
+                </a>
+              </li>
+            </ul>
+
+          </div>
+        </li>
+      {% endfor %}
+      </ul>
+
+    {% else %}
+      <p>You don't have any Albums, <a href="{% url 'upload' %}">create one</a>!</p>
+    {% endif %}
+
+    </div>
+
+    <div class="small-6 columns">
+      
+    </div>
+    
+  </div>
+
+
+
 {% endblock %}
 
 {% block end_body_block %}

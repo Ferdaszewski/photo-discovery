@@ -70,7 +70,9 @@ MIDDLEWARE_CLASSES = (
 
 
 # Add current user's albums to the template render context.
-TEMPLATE_CONTEXT_PROCESSORS += ('visualize.custom_processors.albums',)
+TEMPLATE_CONTEXT_PROCESSORS += ('visualize.custom_processors.albums',
+                                'django.core.context_processors.request'
+                                )
 
 
 # URL root and WSGI app
