@@ -21,6 +21,21 @@
       {% endfor %}
       </ul>
     </div>
+
+    <div id="del-confirm-modal" class="reveal-modal tiny" data-reveal aria-labelledby="modalTitle" area-hidden="true" role="dialog">
+      <h3 id="modalTitle">Delete this Photo?</h3>
+      <p class="lead">This cannot be undone!</p>
+      <ul class="button-group radius even-3">
+        <li>
+          <a class="button tiny alert delete-confirm-btn">Yes, Delete Photo</a>
+        </li>
+        <li>                  
+          <a class="button tiny close-modal">No!</a>
+        </li>
+      </ul>
+      <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+    </div>
+
 {% else %}
   <p class="text-center">You don't have any photos in this album!</p>
 {% endif %}
