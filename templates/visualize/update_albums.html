@@ -20,9 +20,9 @@
               </a>
             </h5>
 
-            <label>
+            <label class="share-url">
               Share URL, click to select:
-              <input class="share_url" type="text" value="{{ request.get_host }}{% url 'public_album_visualize' album_share_id=album.share_id %}" readonly="readonly" name="share_url">
+              <input type="text" value="{{ request.get_host }}{% url 'public_album_visualize' album_share_id=album.share_id %}" readonly="readonly" name="share_url">
             </label>
 
             <ul class="button-group radius even-3">

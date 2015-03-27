@@ -17,6 +17,7 @@ function getCookie(name) {
 }
 
 // Select text when user clicks in the field
-$('.share_url').on('mouseup', function() {
-    $(this).select();
+$( '.share-url' ).on( 'mouseup', function( event ) {
+    event.preventDefault();
+    $( this ).children( 'input' ).select();
 });
