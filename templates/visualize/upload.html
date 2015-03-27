@@ -4,13 +4,7 @@
 
 
 {% block head_script %}
-<!-- production
-<script type="text/javascript" src="../js/plupload.full.min.js"></script>
--->
-
-<!-- debug -->
-<script src="{% static 'plupload/js/moxie.js' %}"></script>
-<script src="{% static 'plupload/js/plupload.dev.js' %}"></script>
+<script type="text/javascript" src="{% static 'plupload/js/plupload.full.min.js' %}"></script>
 {% endblock %}
 
 
@@ -46,7 +40,13 @@
   </div>
 
   <div class="row">
-    <div id="upload-progress"></div>
+    <div id="upload-progress">      
+    </div>
+
+    <div class="progress small-12 columns radius">
+      <span id="progress-bar" class="meter" style="width: 0%;"></span>
+    </div>
+
     <ul class="small-block-grid-3 medium-block-grid-5 large-block-grid-7" id="filelist">
     </ul>
   </div>

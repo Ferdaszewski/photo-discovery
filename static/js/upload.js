@@ -119,12 +119,16 @@ var uploader = new plupload.Uploader({
       });
 
       document.getElementById("file-select").disabled = true;
+      $( '#file-select' ).html("Files Selected").addClass("success")
       up.settings.total_files = up.total.queued;
+      document.getElementById('upload-progress').innerHTML = 
+      "<span>" + up.total.uploaded + "/" + up.settings.total_files + " Files Uploaded</span>";
     },
 
     // Add csrf token required by Django and the the other form elements to request
     BeforeUpload: function(up, file) {
       document.getElementById("upload-btn").disabled = true;
+      $( '#upload-btn' ).html("Upload Started").addClass("success")
 
       // Remove check for album uniqueness
       $( '#album-name' ).unbind('blur');
@@ -140,13 +144,15 @@ var uploader = new plupload.Uploader({
       };
     },
 
-    UploadProgress: function(up, file) {
-      document.getElementById(file.id).getElementsByClassName('file-upload-progress')[0].innerHTML = " " + file.percent + "%";
-    },
-
     FileUploaded: function(up, file) {
       document.getElementById('upload-progress').innerHTML = 
-      "<span>" + up.total.uploaded + "/" + up.settings.total_files + " - " + up.total.percent + "%</span>"
+      "<span>" + up.total.uploaded + "/" + up.settings.total_files + " Files Uploaded</span>";
+      $( '#progress-bar' ).css('width', up.total.percent + "%");
+
+      // Remove photo when it has been uploaded
+      $( '#' + file.id ).fadeOut('slow', function( event ) {
+        $( this ).remove()
+      });
     },
 
     Error: function(up, err) {
