@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 import json
 
@@ -99,8 +99,7 @@ def edit_albums(request):
         album_id = request.POST['id']
         album = Album.objects.get(user=user, id=album_id)
         album.delete()
-        return HttpResponse(json.dumps({'OK': 1, 'share_id': album.share_id}),
-                            content_type="application/json")
+        return JsonResponse({'OK': 1, 'share_id': album.share_id})
     else:
         return render(request, 'visualize/update_albums.html')
 
@@ -121,8 +120,7 @@ def edit_album(request, album_name_slug):
         photo_id = request.POST['id']
         photo = Photo.objects.get(album=album, photo_id=photo_id)
         photo.delete()
-        return HttpResponse(json.dumps({'OK': 1}),
-                            content_type="application/json")
+        return JsonResponse({'OK': 1})
 
     # Not POST, so get album photos and display
     else:
@@ -162,28 +160,62 @@ def upload_image(request):
             # Process image
             process_image(new_photo)
 
-        return HttpResponse(json.dumps({'OK': 1}),
-                            content_type="application/json")
+        return JsonResponse({'OK': 1})
+
+    # Not a POST, not other HTTP verbs for this view.
     else:
-        return HttpResponse("Error, POST only at this URL")
+        raise Http404
 
 
 @login_required
 def create_album(request):
-    """POST AJAX endpoint for creating an album."""
-    if request.method == 'POST' and request.POST.get('album_name'):
-        new_album, created = Album.objects.get_or_create(
-            name=request.POST.get('album_name'),
-            user=request.user)
-        if created:
-            return HttpResponse(
-                json.dumps({'success': True, 'error_message': None}),
-                content_type='application/json')
-    else:
-        return HttpResponse("Error, POST only at this URL")
+    """POST AJAX endpoint for creating an album and checking album name
+    uniqueness.
+    """
+    if request.method == 'POST':
 
-    # Album not created, return error
-    return HttpResponse(
-        json.dumps({'success': False,
-                   'error_message': 'Already an album with that name!'}),
-        content_type='application/json')
+        # Get data from request payload
+        user = request.user
+
+        data = json.loads(request.body)
+        album_name = data['album_name']
+        album_create = data['album_create']
+
+        # Default responses
+        unique = False
+        created = False
+        message_text = None
+
+        # Try to create the album
+        if album_create:
+            new_album, created = Album.objects.get_or_create(
+                name=album_name,
+                user=user)
+
+            # New album created
+            if created:
+                unique = True
+                created = True
+                message_text = str(new_album)
+
+            # Error, album already exists with name of album_name
+            else:
+                message_text = "{} already exists!".format(new_album)
+
+        # Check that the album_name is unique but don't create album
+        else:
+            unique = not Album.objects.filter(
+                name=album_name, user=user).exists()
+            if not unique:
+                message_text = "{} already exists!".format(album_name)
+
+        # Return JSON response
+        return JsonResponse({
+            'unique': unique,
+            'created': created,
+            'message_text': message_text
+            })
+
+    # Not a POST, not other HTTP verbs for this view.
+    else:
+        raise Http404

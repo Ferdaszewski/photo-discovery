@@ -1,40 +1,48 @@
 function start_upload(up, name) {
   if (name.length === 0) {
-    display_error("Please enter an Album Name");
+    display_message("Please enter an Album Name");
     return;
   }
 
-  // Ajax call to create album, display error if album name is not unique
+  // Ajax call to create album, display error if album name is not created
   $.ajax({
     url: "album/",
-    data: {
-      album_name: name,
-      csrfmiddlewaretoken: getCookie('csrftoken')
-    },
+    contentType: "application/json",
+    data: JSON.stringify({
+      album_name: album_name,
+      album_create: true
+    }),
     type: "POST",
     dataType: "json",
+    headers: { "X-CSRFToken": getCookie( 'csrftoken' ) },
 
-    success: function(json) {
-      if (json['success']) {            
+    success: function(response_json) {
+      if (response_json['created'] && response_json['unique']) {      
+
         // Start plupload upload of images
         up.start();
+
       } else {
-        display_error(json['error_message']);
+        display_message("Error: " + response_json['message_text']);
         return;
       }
     },
 
     error: function(xhr, status, errorThrown) {
-      display_error("Ajax error");
-      error-display.log(errorThrown);
+      display_message("Error: Ajax error when creating the album.");
+      console.log(errorThrown);
       return;
     }
   });
 }
 
 
-function display_error(message) {
-  var error_message = "<div data-alert class='alert-box alert radius'>" + 
+function display_message(message, type) {
+
+  // Message type of alert is the default
+  type = type || "alert";
+
+  var error_message = "<div data-alert class='alert-box " + type + " radius'>" + 
                         message +
                         "<a href='#' class='close'>&times;</a>" +
                       "</div>"
@@ -62,7 +70,6 @@ var uploader = new plupload.Uploader({
     ]
   },
 
-
   // Plupload callback functions
   init: {
     PostInit: function(up) {
@@ -80,7 +87,7 @@ var uploader = new plupload.Uploader({
           up.settings.album_name = $.trim(document.getElementById("album-name").value);
           album_response = start_upload(uploader, up.settings.album_name);
         } else {
-          display_error("Please select at lease one file to upload.")
+          display_message("Please select at lease one file to upload.")
         }
         
         // start_upload only returns on an error, otherwise starts the upload
@@ -115,11 +122,14 @@ var uploader = new plupload.Uploader({
       up.settings.total_files = up.total.queued;
     },
 
-    // Add csrf token required by Django and the other form elements to request
+    // Add csrf token required by Django and the the other form elements to request
     BeforeUpload: function(up, file) {
       document.getElementById("upload-btn").disabled = true;
 
-      // Remove any error that is displayed
+      // Remove check for album uniqueness
+      $( '#album-name' ).unbind('blur');
+
+      // Remove any error message that is displayed
       $('#error-display').children().fadeOut('fast', function() {
         $(this).remove();
       });
@@ -140,11 +150,49 @@ var uploader = new plupload.Uploader({
     },
 
     Error: function(up, err) {
-      document.getElementById('error-display').appendChild(document.createTextNode("\nError #" + err.code + ": " + err.message));
+      display_message("\nError #" + err.code + ": " + err.message);
     }
   }
 });
 
 
+// Initialize the plupload unloader
 uploader.init();
 
+
+// Check album name when the input field looses focus and give album name feedback
+$( '#album-name' ).blur( function() {
+  album_name = $.trim( $( '#album-name' ).val() );
+
+  if (album_name.length === 0) {
+  return;
+  }
+
+  // Ajax call to check album uniqueness
+  $.ajax({
+    url: "album/",
+    contentType: "application/json",
+    data: JSON.stringify({
+      album_name: album_name,
+      album_create: false
+    }),
+    type: "POST",
+    dataType: "json",
+    headers: { "X-CSRFToken": getCookie( 'csrftoken' ) },
+
+    success: function(response_json) {
+      if (response_json['unique']) {
+        display_message("Album Name OK!", "success")
+      } else {
+        display_message("Error: " + response_json['message_text']);
+        return;
+      }
+    },
+
+    error: function(xhr, status, errorThrown) {
+      display_message("Error: Ajax error when creating the album.");
+      console.log(errorThrown);
+      return;
+    }
+  });
+});
