@@ -5,6 +5,7 @@ secrets.json
 *.dat
 *.json
 *.jpg
+*.log
 
 # DB
 *.sqlite3
@@ -16,6 +17,7 @@ secrets.json
 **/media/*
 **/img/*
 **/imagesloaded/*
+**/logs/*
 
 
 # Github Python boilerplate
