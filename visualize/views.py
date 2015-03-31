@@ -94,14 +94,15 @@ def edit_albums(request):
     """On GET display all the user's albums. POST is an AJAX call to
     delete an album.
     """
+    user = request.user
     if request.method == 'POST':
-        user = request.user
         album_id = request.POST['id']
         album = Album.objects.get(user=user, id=album_id)
         album.delete()
         return JsonResponse({'OK': 1, 'share_id': album.share_id})
     else:
-        return render(request, 'visualize/update_albums.html')
+        context_dict = {"all_albums": Album.objects.filter(user=user)}
+        return render(request, 'visualize/update_albums.html', context_dict)
 
 
 @login_required

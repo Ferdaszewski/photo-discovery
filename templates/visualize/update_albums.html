@@ -8,9 +8,9 @@
     <div class="small-12 columns">
       <h2 class="text-center">Edit Your Albums</h2>
 
-      {% if albums %}
+      {% if all_albums %}
       <ul  class="small-block-grid-3 text-center" id="album-wrapper">
-      {% for album in albums %}
+      {% for album in all_albums %}
         <li class="{{ album.share_id }}">
           <div class="panel">
 

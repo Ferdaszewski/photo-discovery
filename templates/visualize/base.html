@@ -33,15 +33,19 @@
         <li class="has-dropdown">
           <a href="#">My Albums</a>
           <ul class="dropdown">
-            {% for album_in_list in albums %}
-              
+
+            {% for album_in_list in albums %}              
               <li class="{% if album.slug == album_in_list.slug %}active {% endif %}{{ album_in_list.share_id }}">
                 <a href="{% url 'album_visualize' album_name_slug=album_in_list.slug %}">
                   {{ album_in_list.name }}
                 </a>
               </li>
-
             {% endfor %}
+
+            {% if albums|length_is:"10" %}
+              <li><a href="{% url 'edit_albums' %}">View all Albums</a></li>
+            {% endif %}
+
             <li class="divider"></li>
             <li><a href="{% url 'upload' %}">Create a new album</a></li>
             <li><a href="{% url 'edit_albums' %}"><label>Edit Albums</label></a></li>
