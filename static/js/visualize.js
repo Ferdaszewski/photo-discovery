@@ -17,6 +17,8 @@ imgLoad.on( 'always', function( instance ) {
 
         // Remove pre-load DOM node as we no longer need it
         $( this ).remove();
+
+        // Instantiate the visualization
         albumScrubber();
     });
 });
@@ -46,7 +48,6 @@ function albumScrubber() {
     var as_current = 1;
     changeImage();
 
-    var width = $( '#album-wrapper' ).innerWidth();
     var numslides = img_total;
 
     function changeImage() {
@@ -59,6 +60,7 @@ function albumScrubber() {
     };
 
     $( document ).on( 'mousemove', 'body', function( e ) {
+        var width = $( document ).innerWidth();
         x = e.pageX - $(this).offset().left;
         as_current = Math.floor(x / (width / numslides)) + 1;
 
