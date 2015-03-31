@@ -12,10 +12,8 @@ import uuid
 
 def create_file_path(instance, filename):
     """Helper function to create a file path for a photo."""
-    album_id = instance.album.id
     new_filename = instance.photo_id + '.' + filename.split('.')[-1]
-
-    return 'original_images/{1}'.format(album_id, new_filename)
+    return 'original_images/{0}'.format(new_filename)
 
 
 def create_uuid():
