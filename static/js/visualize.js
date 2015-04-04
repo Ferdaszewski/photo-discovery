@@ -55,7 +55,7 @@ function albumScrubber() {
         $( '#album-inner > :nth-child(' + as_current + ')' ).addClass( 'as-current' );
 
         // Change background color to match displayed image
-        var hexrgb = $( '#album-inner > .as-current' ).data( 'hexrgb' )
+        var hexrgb = $( '#album-inner > .as-current img' ).data( 'hexrgb' );
         $( 'body' ).css( 'background-color' , hexrgb );
     };
 

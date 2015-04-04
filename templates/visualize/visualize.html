@@ -21,8 +21,8 @@
   <div id="album-inner">
 
   {% for image in images %}
-    <div class="image-wrapper" data-hexrgb="{{ image.metadata.pc_hex }}">
-      <img class="ac-image" src="{{ image.web.url }}" alt="{{ image.original_name }}">
+    <div class="image-wrapper">
+      <img class="ac-image" src="{{ image.web.url }}" alt="{{ image.original_name }}" data-hexrgb="{{ image.metadata.pc_hex }}">
     </div>
   {% endfor %}
 
