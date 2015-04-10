@@ -1,6 +1,11 @@
 function start_upload(up, name) {
+  // Album name must be more than 0 and 32 characters or less
   if (name.length === 0) {
     display_message("Please enter an Album Name");
+    return;
+  }
+  if (name.length > 32) {
+    display_message("Error: Album name to long (32 characters max)");
     return;
   }
 
@@ -180,8 +185,13 @@ uploader.init();
 $( '#album-name' ).blur( function() {
   album_name = $.trim( $( '#album-name' ).val() );
 
+  // Album name must be more than 0 and 32 characters or less
   if (album_name.length === 0) {
-  return;
+    return;
+  }
+  if (album_name.length > 32) {
+    display_message("Error: Album Name to long (32 characters max)");
+    return;
   }
 
   // Ajax call to check album uniqueness
@@ -206,7 +216,7 @@ $( '#album-name' ).blur( function() {
     },
 
     error: function(xhr, status, errorThrown) {
-      display_message("Error: Ajax error when creating the album.");
+      display_message("Error: Ajax error when checking album name.");
       console.log(errorThrown);
       return;
     }
