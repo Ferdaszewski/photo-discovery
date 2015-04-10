@@ -4,6 +4,11 @@ function start_upload(up, name) {
     return;
   }
 
+  // Starting upload process, warn when navigating away form page
+  $( window ).on( "beforeunload", function() {
+    return "Exiting will cancel upload.\nAre you sure?";
+  });
+
   // Ajax call to create album, display error if album name is not created
   $.ajax({
     url: "album/",
@@ -157,6 +162,11 @@ var uploader = new plupload.Uploader({
 
     Error: function(up, err) {
       display_message("\nError #" + err.code + ": " + err.message);
+    },
+
+    UploadComplete: function() {
+      // Remove window unload callback now that upload has completed
+      $( window ).off( "beforeunload" );
     }
   }
 });
